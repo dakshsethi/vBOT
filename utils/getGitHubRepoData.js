@@ -145,7 +145,35 @@ const sendPR = async(repo) => {
     
     if(repo.version_satisfied) return "";
 
-    const url1 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/ref/heads/fix`
+    const urlC1 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/refs/heads/`
+    let optionsC1 = {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`
+        }
+    }
+    const responseC1 = await fetch(urlC1, optionsC1);
+    const jsonResponseC1 = await responseC1.json();
+    const mainSHA = await jsonResponseC1[jsonResponseC1.length - 1].object.sha;
+
+    const urlC2 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/refs`;
+    const newBranchName = 'vbot-fix';
+    const bodyC2 = {
+        "ref": `refs/heads/${newBranchName}`,
+        "sha": mainSHA
+    };
+    let optionsC2 = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`
+        },
+        body: JSON.stringify(bodyC2)
+    }
+    const responseC2 = await fetch(urlC2, optionsC2);
+    const jsonResponseC2 = await responseC2.json();
+    console.log("New branch created!!")
+
+    const url1 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/ref/heads/${newBranchName}`
     let options1 = {
         method: 'GET',
         headers: {
@@ -155,15 +183,15 @@ const sendPR = async(repo) => {
     const response1 = await fetch(url1, options1);
     const jsonResponse1 = await response1.json();
     const sha_latest_commit = await jsonResponse1.object.sha;
-    // console.log("URL1 = GET " + url1);
-    // console.log(chalk.bgGreen("sha latest commit = " + sha_latest_commit));
+    console.log("URL1 = GET " + url1);
+    console.log(chalk.bgGreen("sha latest commit = " + sha_latest_commit));
 
     const url2 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/commits/${sha_latest_commit}`;
     const response2 = await fetch(url2, options1);
     const jsonResponse2 = await response2.json();
     const sha_base_tree = await jsonResponse2.tree.sha;
-    // console.log("URL2 = GET " + url2);
-    // console.log(chalk.bgGreen("sha base tree = " + sha_base_tree));
+    console.log("URL2 = GET " + url2);
+    console.log(chalk.bgGreen("sha base tree = " + sha_base_tree));
 
     const url3 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/trees`;
     const body3 =
@@ -194,8 +222,8 @@ const sendPR = async(repo) => {
     const response3 = await fetch(url3, options3);
     const jsonResponse3 = await response3.json();
     const sha_new_tree = await jsonResponse3.sha;
-    // console.log("URL3 = POST " + url3);
-    // console.log(chalk.bgGreen("sha new tree = " + sha_new_tree));
+    console.log("URL3 = POST " + url3);
+    console.log(chalk.bgGreen("sha new tree = " + sha_new_tree));
 
     const url4 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/commits`;
     const body4 =
@@ -214,10 +242,10 @@ const sendPR = async(repo) => {
     const response4 = await fetch(url4, options4);
     const jsonResponse4= await response4.json();
     const sha_new_commit = jsonResponse4.sha;
-    // console.log("URL4 = POST " + url4);
-    // console.log(chalk.bgGreen("sha new commit = " + sha_new_commit));
+    console.log("URL4 = POST " + url4);
+    console.log(chalk.bgGreen("sha new commit = " + sha_new_commit));
 
-    const url5 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/refs/heads/fix`;
+    const url5 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/git/refs/heads/${newBranchName}`;
     const body5 =
         {
             "sha": sha_new_commit
@@ -231,15 +259,15 @@ const sendPR = async(repo) => {
     }
     const response5 = await fetch(url5, options5);
     const jsonResponse5= response5.status;
-    // console.log("URL5 = POST " + url5);
-    // console.log(chalk.bgGreen("Reponse status = " + jsonResponse5));
+    console.log("URL5 = POST " + url5);
+    console.log(chalk.bgGreen("Reponse status = " + jsonResponse5));
 
     const url6 = `https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${repo.name}/pulls`;
     const body6 = 
         {
             "title": "chore: updates axios to 0.23.0",
             "body": "Updates the version of axios from `0.21.1` to `0.23.0`",
-            "head": "fix",
+            "head": `${newBranchName}`,
             "base": "main"
         };
     let options6 = {
@@ -252,7 +280,7 @@ const sendPR = async(repo) => {
     const response6 = await fetch(url6, options6);
     const jsonResponse6= await response6.json();
     const prURL = jsonResponse6.html_url;
-    // console.log(chalk.bgBlue("PR URl = " + prURL));
+    console.log(chalk.bgBlue("PR URl = " + prURL));
     
     return prURL;
 }
