@@ -189,8 +189,6 @@ Steps:
   This generates a CSV file `output.csv` like this:
   [![output csv file][output-csv]]()
 #### 2. Update PR File
-**Note:** This function requires that a `fix` branch exists right now in the repositories. As i tried working on `Creating Branch using GitHub API` but due to some errors and technical glitch, it was not working. Also due to lack of time as the project was very tedious, i am able to commit 2 new files with the help of `GitHub API` and call a PR request but not `package.json` as of right now. If given enough time, this issue will be resolved later on.
-
 This is the 2nd command of the `SDK Tooling Challenge`
 Steps:
   - Go to project directory
@@ -202,7 +200,7 @@ Steps:
 
   This produces following output
   [![update command][update-command]]()
-  The URLs and sha are just for the reference of understanding as multiple back-to-back API calls are fired just to commit and open up a PR in the `fix` branch.
+  The URLs and sha are just for the reference of understanding as multiple back-to-back API calls are fired just to commit and open up a PR in the `vbot-fix` branch.
 
   This can be checked in the Repo Pull page too:
   [![Pull Request][PR]]()
