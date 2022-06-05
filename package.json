@@ -1,0 +1,45 @@
+{
+  "name": "version-bot",
+  "version": "1.0.0",
+  "description": "This is CLI to check for dependencies on github repositories",
+  "main": "bin/index.js",
+  "bin": {
+    "vbot": "./bin/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://dakshsethi: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@github.com/dyte-submissions/dyte-vit-2022-dakshsethi.git"
+  },
+  "keywords": [
+    "CLI",
+    "dependencies",
+    "versions"
+  ],
+  "author": "Daksh Sethi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dyte-submissions/dyte-vit-2022-dakshsethi/issues"
+  },
+  "homepage": "https://github.com/dyte-submissions/dyte-vit-2022-dakshsethi#readme",
+  "dependencies": {
+    "@octokit/rest": "^18.12.0",
+    "axios": "^0.27.2",
+    "chalk": "^5.0.1",
+    "commander": "^9.3.0",
+    "csv-parse": "^5.1.0",
+    "csv-stringify": "^6.1.0",
+    "dotenv": "^16.0.1",
+    "fast-csv": "^4.3.6",
+    "fs": "0.0.1-security",
+    "node-fetch": "^3.2.4",
+    "ora": "^6.1.0",
+    "path": "^0.12.7",
+    "require": "^2.4.20",
+    "table": "^6.8.0",
+    "yargs": "^17.5.1"
+  }
+}
